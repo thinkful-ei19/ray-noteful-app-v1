@@ -3,7 +3,10 @@
 // TEMP: Simple In-Memory Database
 const express = require('express');
 
+//Simple In-Memory Database
 const data = require('./db/notes');
+const simDB = require('./db/simDB'); 
+const notes = simDB.initialize(data);
 
 const { PORT } = require('./config');
 
@@ -11,22 +14,53 @@ const app = express();
 app.use(express.static('public'));
 
 
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', (req, res, next) => {
   const searchTerm = req.query.searchTerm;
-  if (searchTerm) {
-    const result = data.filter(item => item.title.includes(searchTerm));
-    res.json(result);
-  }
-  res.json(data);
+  
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err); //goes to error handler
+    }
+    res.json(list); //respons with filtered array
+  });
+  // const searchTerm = req.query.searchTerm;
+  // if (searchTerm) {
+  //   const result = data.filter(item => item.title.includes(searchTerm));
+  //   res.json(result);
+  // }
+  // res.json(data);
 });
 
 
-app.get('/api/notes/:id', (req, res) => {
+app.get('/api/notes/:id', (req, res, next) => {
   const requestId = req.params.id;
-  const findId = data.find(item => item.id === Number(requestId));
-  res.json(findId);
+
+  notes.find(requestId, (err, item) => {
+    if(err) {
+      console.error(err);
+    } 
+    if(item) {
+      console.log(item);
+    } else {
+      console.log('not found');
+    }
+  });
 });
 
+
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  res.status(404).json({ message: 'Not Found' });
+});
+
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: err
+  });
+});
 
 
 //Listen for incoming connections
