@@ -5,8 +5,11 @@ const express = require('express');
 
 const data = require('./db/notes');
 
+const { PORT } = require('./config');
+
 const app = express();
 app.use(express.static('public'));
+
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;
@@ -17,6 +20,7 @@ app.get('/api/notes', (req, res) => {
   res.json(data);
 });
 
+
 app.get('/api/notes/:id', (req, res) => {
   const requestId = req.params.id;
   const findId = data.find(item => item.id === Number(requestId));
@@ -26,7 +30,7 @@ app.get('/api/notes/:id', (req, res) => {
 
 
 //Listen for incoming connections
-app.listen(8080, function () {
+app.listen(PORT, function () {
   console.info(`Server listening on ${this.address().port}`);
 }).on('error', err => {
   console.error(err);
