@@ -17,7 +17,6 @@ app.use(express.json());
 
 app.get('/api/notes', (req, res, next) => {
   const searchTerm = req.query.searchTerm;
-  
   notes.filter(searchTerm, (err, list) => {
     if (err) {
       return next(err); //goes to error handler
@@ -41,9 +40,9 @@ app.get('/api/notes/:id', (req, res, next) => {
       console.error(err);
     } 
     if(item) {
-      console.log(item);
+      res.json(item);
     } else {
-      console.log('not found');
+      return next(err);
     }
   });
 });
