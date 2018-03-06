@@ -8,15 +8,19 @@ const data = require('./db/notes');
 const app = express();
 app.use(express.static('public'));
 
-
 app.get('/api/notes', (req, res) => {
+  const searchTerm = req.query.searchTerm;
+  if (searchTerm) {
+    const result = data.filter(item => item.title.includes(searchTerm));
+    res.json(result);
+  }
   res.json(data);
 });
 
 app.get('/api/notes/:id', (req, res) => {
-  const requestedID = req.params.id;
-  const findID = data.find(item => item.id === Number(requestedID));
-  res.json(findID);
+  const requestId = req.params.id;
+  const findId = data.find(item => item.id === Number(requestId));
+  res.json(findId);
 });
 
 
