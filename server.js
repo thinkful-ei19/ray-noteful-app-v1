@@ -1,91 +1,45 @@
 'use strict';
 
-// TEMP: Simple In-Memory Database
 const express = require('express');
 const morgan = require('morgan');
 
-//Simple In-Memory Database
-const data = require('./db/notes');
-const simDB = require('./db/simDB'); 
-const notes = simDB.initialize(data);
+const notesRouter = require('./router/notes.router');
 
+// const logger = require('./middleware/logger');
 const { PORT } = require('./config');
 
 // Create an Express application
 const app = express();
+
+
+app.use('/v1', notesRouter);
 
 // Log all requests
 app.use(morgan('dev'));
 
 // Create a static webserver
 app.use(express.static('public'));
+
+// Parse request body
 app.use(express.json());
 
 
-app.get('/api/notes', (req, res, next) => {
-  const {searchTerm} = req.query;
-  notes.filter(searchTerm, (err, list) => {
-    if (err) {
-      return next(err); //goes to error handler
-    }
-    res.json(list); //respons with filtered array
-  });
-  // const searchTerm = req.query.searchTerm;
-  // if (searchTerm) {
-  //   const result = data.filter(item => item.title.includes(searchTerm));
-  //   res.json(result);
-  // }
-  // res.json(data);
+
+
+// DEMO: a rudimentary way to test our error handler
+app.get('/throw', (req, res, next) => {
+  throw new Error('Boom!!');
 });
 
-
-app.get('/api/notes/:id', (req, res, next) => {
-  const requestId = req.params.id;
-
-  notes.find(requestId, (err, item) => {
-    if(err) {
-      console.error(err);
-    } 
-    if(item) {
-      res.json(item);
-    } else {
-      return next(err);
-    }
-  });
-});
-
-
-app.put('/api/notes/:id', (req, res, next) => {
-  const id = req.params.id;
-
-  const updateObj = {};
-  const updateFields = ['title', 'content'];
-
-  updateFields.forEach(field => {
-    if (field in req.body) {
-      updateObj[field] = req.body[field];
-    }
-  });
-
-  notes.update(id, updateObj, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
-});
-
-
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+// Catch-all 404
+app.use(function (req, res, next) {
+  const err = new Error('Not Found');
   err.status = 404;
-  res.status(404).json({ message: 'Not Found' });
+  next(err);
 });
 
+// Catch-all Error handler
+// NOTE: we'll prevent stacktrace leak in later exercise
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({
@@ -94,14 +48,9 @@ app.use(function (err, req, res, next) {
   });
 });
 
-
-//Listen for incoming connections
+// Listen for incoming connections
 app.listen(PORT, function () {
   console.info(`Server listening on ${this.address().port}`);
 }).on('error', err => {
   console.error(err);
 });
-
-
-
-// INSERT EXPRESS APP CODE HERE...
