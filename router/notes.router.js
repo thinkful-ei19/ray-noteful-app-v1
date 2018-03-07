@@ -94,8 +94,9 @@ router.post('/notes', (req, res, next) => {
 });
 
 router.delete('/notes/:id', (req, res) => {
-  notes.delete(req.params.id);
-  console.log(`Deleted noteful list item ${req.params.id}`);
+  const id = req.params.id;
+  notes.delete(id);
+  console.log(`Deleted noteful list item ${id}`);
   res.status(204).end();
 });
 
