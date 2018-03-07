@@ -2,6 +2,7 @@
 
 // TEMP: Simple In-Memory Database
 const express = require('express');
+const morgan = require('morgan');
 
 //Simple In-Memory Database
 const data = require('./db/notes');
@@ -10,13 +11,19 @@ const notes = simDB.initialize(data);
 
 const { PORT } = require('./config');
 
+// Create an Express application
 const app = express();
+
+// Log all requests
+app.use(morgan('dev'));
+
+// Create a static webserver
 app.use(express.static('public'));
 app.use(express.json());
 
 
 app.get('/api/notes', (req, res, next) => {
-  const searchTerm = req.query.searchTerm;
+  const {searchTerm} = req.query;
   notes.filter(searchTerm, (err, list) => {
     if (err) {
       return next(err); //goes to error handler
@@ -96,7 +103,5 @@ app.listen(PORT, function () {
 });
 
 
-
-console.log('hello world!');
 
 // INSERT EXPRESS APP CODE HERE...

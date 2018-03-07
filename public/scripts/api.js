@@ -28,7 +28,7 @@ const api = {
       url: `/api/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify(obj),
+      data: JSON.stringify({name: 'Ray'}),
       success: callback
     });
   }
