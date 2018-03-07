@@ -12,7 +12,7 @@ const { PORT } = require('./config');
 const app = express();
 
 
-app.use('/v1', notesRouter);
+
 
 // Log all requests
 app.use(morgan('dev'));
@@ -23,7 +23,7 @@ app.use(express.static('public'));
 // Parse request body
 app.use(express.json());
 
-
+app.use('/v1/api', notesRouter);
 
 
 // DEMO: a rudimentary way to test our error handler
