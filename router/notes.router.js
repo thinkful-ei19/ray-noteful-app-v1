@@ -71,7 +71,6 @@ router.put('/notes/:id', (req, res, next) => {
 });
 
 router.post('/notes', (req, res, next) => {
-  console.log('Here',req.body);
   const { title, content } = req.body;
 
   const newItem = { title, content };
@@ -92,6 +91,12 @@ router.post('/notes', (req, res, next) => {
       next();
     }
   });
+});
+
+router.delete('/notes/:id', (req, res) => {
+  notes.delete(req.params.id);
+  console.log(`Deleted noteful list item ${req.params.id}`);
+  res.status(204).end();
 });
 
 

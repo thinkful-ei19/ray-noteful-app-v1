@@ -44,4 +44,16 @@ const api = {
       success: callback
     });
   },
+
+  delete: function(id, obj, callback) {
+    $.ajax({
+      type: 'DELETE',
+      url: '/v1/api/notes',
+      contentType: 'application/json',
+      dataType: 'json',
+      processData: false,
+      data: JSON.stringify(obj),
+      success: callback
+    });
+  }
 }; 
