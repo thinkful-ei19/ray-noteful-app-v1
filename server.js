@@ -23,7 +23,7 @@ app.use(express.static('public'));
 // Parse request body
 app.use(express.json());
 
-app.use('/v1/api', notesRouter);
+app.use('/', notesRouter);
 
 
 // DEMO: a rudimentary way to test our error handler

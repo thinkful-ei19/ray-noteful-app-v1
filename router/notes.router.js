@@ -10,7 +10,7 @@ const notes = simDB.initialize(data);
 
 
 // Get All (and search by query)
-router.get('/notes', (req, res, next) => {
+router.get('/api/notes', (req, res, next) => {
   const { searchTerm } = req.query;
   
   notes.filter(searchTerm, (err, list) => {
@@ -22,7 +22,7 @@ router.get('/notes', (req, res, next) => {
 });
 
 // Get a single item
-router.get('/notes/:id', (req, res, next) => {
+router.get('/api/notes/:id', (req, res, next) => {
   const id = req.params.id;
   
   notes.find(id, (err, item) => {
@@ -38,7 +38,7 @@ router.get('/notes/:id', (req, res, next) => {
 });
 
 // Put update an item
-router.put('/notes/:id', (req, res, next) => {
+router.put('/api/notes/:id', (req, res, next) => {
   const id = req.params.id;
   
   /***** Never trust users - validate input *****/
@@ -70,7 +70,7 @@ router.put('/notes/:id', (req, res, next) => {
   });
 });
 
-router.post('/notes', (req, res, next) => {
+router.post('/api/notes', (req, res, next) => {
   const { title, content } = req.body;
 
   const newItem = { title, content };
@@ -93,7 +93,7 @@ router.post('/notes', (req, res, next) => {
   });
 });
 
-router.delete('/notes/:id', (req, res, next) => {
+router.delete('/api/notes/:id', (req, res, next) => {
   const id = req.params.id;
 
   notes.delete(id, (err, result) => {
@@ -107,14 +107,6 @@ router.delete('/notes/:id', (req, res, next) => {
     }
   });
 });
-
-
-// router.delete('/notes/:id', (req, res, next) => {
-//   const id = req.params.id;
-//   notes.delete(id);
-//   console.log(`Deleted noteful list item ${id}`);
-//   res.status(204).end();
-// });
 
 
 module.exports = router;
