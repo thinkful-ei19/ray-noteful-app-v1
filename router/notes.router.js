@@ -93,12 +93,28 @@ router.post('/notes', (req, res, next) => {
   });
 });
 
-router.delete('/notes/:id', (req, res) => {
+router.delete('/notes/:id', (req, res, next) => {
   const id = req.params.id;
-  notes.delete(id);
-  console.log(`Deleted noteful list item ${id}`);
-  res.status(204).end();
+
+  notes.delete(id, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    if (result) {
+      res.sendStatus(204);
+    } else{
+      next();
+    }
+  });
 });
+
+
+// router.delete('/notes/:id', (req, res, next) => {
+//   const id = req.params.id;
+//   notes.delete(id);
+//   console.log(`Deleted noteful list item ${id}`);
+//   res.status(204).end();
+// });
 
 
 module.exports = router;
