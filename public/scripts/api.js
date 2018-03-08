@@ -6,7 +6,7 @@ const api = {
   search: function (query) {
     return $.ajax({
       type: 'GET',
-      url: '/api/notes/',
+      url: '/api/notes',
       dataType: 'json',
       data: query,
     });
@@ -41,14 +41,12 @@ const api = {
     });
   },
 
-  delete: function(id, obj) {
+  delete: function(id) {
     return $.ajax({
       type: 'DELETE',
-      url: '/api/notes',
+      url: `/api/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
-      processData: false,
-      data: JSON.stringify(obj),
     });
   }
 }; 
