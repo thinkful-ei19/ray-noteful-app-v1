@@ -100,6 +100,16 @@ const noteful = (function () {
         //   });
         // });
 
+        // api.updates(store.currentNote.id, noteObj)
+        //   .then(updateResponse => {
+        //     store.currentNote = updateResponse;
+        //     return api.search(store.currentSearch);
+        //   })
+        //   .then(searchResponse => {
+        //     store.notes = searchResponse;
+        //     render();
+        //   });
+
         api.update(store.currentNote.id, noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
